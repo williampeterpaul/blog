@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-import os, sys
+import os
+import sys
+
 
 def link(link, text=None):
     return f'<a href="{link}">' + (text or link) + '</a>'
@@ -92,22 +94,22 @@ def parse_front_matter(matter):
 
 
 if __name__ == '__main__':
+    path = os.path.dirname(os.path.abspath(__file__))
+    target = os.path.join(path, 'build')
+
+    # Make build directory if it doesn't already exist
+    if not os.path.exists(target):
+        os.makedirs(target)
+
+    print(f'Target build directory {target}')
+
     for document in sys.argv[1:]:
         filename = os.path.split(document)[1]
-        print(f'Processing file: {filename}')
+        print(f'Processing {filename}')
 
         # Parse contents and front-matter
         contents = open(document).read()
         front_matter = parse_front_matter(contents)
-        
-        # Make build directory if it doesn't already exist
-        path = "/c/Users/W/Documents/blog"
-        target = os.path.join(path, '/build')
-
-        print(target)
-
-        if not os.path.exists(target):
-            os.makedirs(target)
         
         print(contents)
 
