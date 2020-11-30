@@ -38,6 +38,8 @@ def render_article_html(matter, body):
     builder = '<h1 style="margin-bottom:7px"> ' + matter['title'] + ' </h1>'
     builder += '<small style="float:left; color: #888">' + matter['date'] + '</small>'
     builder += '<small style="float:right; color: #888"><a href="/">See all posts</a></small>'
+    builder += '<br>'
+    builder += body
 
     return builder
 
@@ -67,6 +69,7 @@ def render_bibliography_html(bibliography):
 if __name__ == '__main__':
     project = os.path.dirname(os.path.abspath(__file__))
     target = os.path.join(project, 'build')
+
     style = open(os.path.join(project, 'style.css')).read()
     template = open(os.path.join(project, 'template.html')).read()
 
