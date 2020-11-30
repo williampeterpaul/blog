@@ -21,7 +21,7 @@ jobs:
       - name: Python version
         run: python -c "import sys; print(sys.version)"
       - name: Build
-        run: python main.py
+        run: python main.py articles/*
       - name: Configure credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:

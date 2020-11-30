@@ -1,116 +1,72 @@
 #!/usr/bin/python3
 import os
 import sys
+import re
 
-
-def link(link, text=None):
-    return f'<a href="{link}">' + (text or link) + '</a>'
-
-
-def image(src, alt=None):
-    return f'<img src="{src}" alt="{alt}" />'
-
-
-def emphasis(text):
-    return f'<em>{text}</em>'
-
-
-def strong(text):
-    return f'<strong>{text}</strong>'
-
-
-def codespan(text):
-    return f'<code>{text}</code>'
-
-
-def inline_html(html):
-    return html
-
-
-def paragraph(text):
-    return f'<p>{text}</p>\n'
-
-
-def heading(text, level):
-    tag = 'h' + level
-    return f'<{tag}>{text}</{tag}>\n'
-
-
-def newline():
-    return ''
-
-
-def line_break():
-    return '<br />\n'
-
-
-def horizontal_break():
-    return '<hr />\n'
-
-
-def block_text(text):
-    return text
-
-
-def block_code(code):
-    return f'<pre><code>{code}</code></pre>\n'
-
-
-def block_quote(text):
-    return f'<blockquote>\n{text}</blockquote>\n'
-
-
-def block_html(html):
-    return f'<p>{html}</p>\n'
-
-
-def block_error(html):
-    return f'<div class="error">{html}</div>\n'
-
-
-def unordered_list(text):
-    return f'<ul>\n{text}</ul>\n'
-
-
-def ordered_list(text):
-    return f'<ol>\n{text}</ol>\n'
-
-
-def list_item(text):
-    return f'<li>{text}</li>\n'
-
-
-def escape(s, quote=True):
-    s = s.replace("&", "&amp;")
-    s = s.replace("<", "&lt;")
-    s = s.replace(">", "&gt;")
+def escape(content, quote=True):
+    content = content.replace('&', '&amp;')
+    content = content.replace('<', '&lt;')
+    content = content.replace('>', '&gt;')
     if quote:
-        s = s.replace('"', "&quot;")
-    return s
+        content = content.replace('"', '&quot;')
+    return content
 
 
-def parse_front_matter(matter):
-    return {}
+def parse_front_matter(content):
+    matter = {}
+    chunks = re.split('\n+', content)
+    betweenSquareBracketsPattern = re.compile(r'(?<=\[).+?(?=\])')
+    betweenRoundedBracketsPattern = re.compile(r'(?<=\().+?(?=\))')
+    for chunk in chunks[:3]:
+        squareBracketsMatch = re.search(betweenSquareBracketsPattern, chunk)
+        roundedBracketsMatch = re.search(betweenRoundedBracketsPattern, chunk)
+        # print(squareBracketsMatch.group())
+        # print(roundedBracketsMatch.group())
+        matter[squareBracketsMatch.group()] = roundedBracketsMatch.group()
+
+    # print(matter)
+    return matter
+
+
+def parse_body(content):
+    chunks = re.split('\n', content)
+    return '\n'.join(chunks[4:])
+
+
+def render_post(matter, body):
+    pass
+
+
+def render_table_of_contents(matter):
+    pass
 
 
 if __name__ == '__main__':
-    path = os.path.dirname(os.path.abspath(__file__))
-    target = os.path.join(path, 'build')
+    builder = {'category': [], 'title': [], 'date': []}
+    project = os.path.dirname(os.path.abspath(__file__))
+    target = os.path.join(project, 'build')
 
-    # Make build directory if it doesn't already exist
     if not os.path.exists(target):
         os.makedirs(target)
 
-    print(f'Target build directory {target}')
-
     for document in sys.argv[1:]:
         filename = os.path.split(document)[1]
-        print(f'Processing {filename}')
+        content = open(document).read()
 
-        # Parse contents and front-matter
-        contents = open(document).read()
-        front_matter = parse_front_matter(contents)
-        
-        print(contents)
+        matter = parse_front_matter(content)
+        body = parse_body(content)
+
+        if(matter['category'] not in builder['category']):
+            builder['category'].append(matter['category'])
+        if(matter['title'] not in builder['title']):
+            builder['title'].append(matter['title'])
+        if(matter['date'] not in builder['date']):
+            builder['date'].append(matter['date'])
+
+    content = open(os.path.join(project, 'template.html')).read()
+    content = content.replace('</body>', '<h1>test</h1></body>')
+    open(os.path.join(target, 'index.html'), 'w').write(content)
+    print(builder)
+    print(content)
 
 
