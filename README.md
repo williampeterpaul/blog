@@ -7,7 +7,7 @@ The project makes use of a GitHub actions workflow to build and sync the static 
 
 ### Usage
 
-There are no tests, validation or sanitization. Each post should be written in markdown and conform to the following structure w/ front matter -
+There are no tests, validation or sanitization. Each post should be written in markdown and conform to the following structure with front matter —
 
 ```
 [category]: <> (General)
@@ -17,8 +17,9 @@ There are no tests, validation or sanitization. Each post should be written in m
 This is the article!
 ```
 
-Dates should be in ISO format YYYY-MM-DD
+Dates should be in ISO format `YYYY-MM-DD`
 
 
-To build the website `python main.py articles/*.md`
-An example deployment might look like `aws s3 sync build/ s3://AWS_BUCKET --acl public-read`
+- To build the website `python main.py articles/*.md`
+
+- An example deployment might look like `aws s3 sync build/ s3://AWS_BUCKET --acl public-read`
