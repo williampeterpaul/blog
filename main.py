@@ -3,6 +3,50 @@ import os
 import sys
 import re
 
+# Credit to Erik Vullings author of slimdown-js for the Regular Expressions
+# https://github.com/erikvullings/slimdown-js
+rules = [
+    {
+        'tag': 'header', 
+        'pattern': re.compile(r'(#+)(.*)'), 
+        'resolve': lambda match: '<h{tag}>{content}</h{tag}>'.format(tag = len(match[0]), content = match[1])
+    },
+    {
+        'tag': 'image', 
+        'pattern': re.compile(r'!\[([^\]]+)\]\(([^)]+)\)'), 
+        'resolve': lambda match: '<img src="{source}" alt="{alternative}">'.format(source = match[1], alternative = match[0])
+    },
+    {
+        'tag': 'link', 
+        'pattern': re.compile(r'[^!]\[([^\]]+)\]\(([^)]+)\)'), 
+        'resolve': lambda match: '<a href="{href}">{content}</a>'.format(href = match[1], content = match[0])
+    },
+    {
+        'tag': 'bold', 
+        'pattern': re.compile(r'(\*\*|__)(.*?)\1'), 
+        'resolve': lambda match: '<strong>{content}</strong>'.format(content = match[1])
+    },
+    {
+        'tag': 'emphasis', 
+        'pattern': re.compile(r'(\*|_)(.*?)\1'), 
+        'resolve': lambda match: '<em>{content}</em>'.format(content = match[1])
+    },
+    {
+        'tag': 'blockquote', 
+        'pattern': re.compile(r'(&gt;|\>)(.*)'), 
+        'resolve': lambda match: '<blockquote>{content}</blockquote>'.format(content = match[1])
+    },
+    {
+        'tag': 'horizontal rule', 
+        'pattern': re.compile(r'-{5,}'), 
+        'resolve': lambda match: '<hr />'
+    },
+    {
+        'tag': 'unordered list', 
+        'pattern': re.compile(r'(\*|\-|\+)(.*)'), 
+        'resolve': lambda match: '<ul><li>{element}</li></ul>'.format(element = match[1])
+    }
+]
 
 def escape(content, quote=True):
     content = content.replace('&', '&amp;')
@@ -36,9 +80,18 @@ def parse_body(content):
 
 def render_article_html(matter, body):
     builder = '<h1 style="margin-bottom:7px"> ' + matter['title'] + ' </h1>'
-    builder += '<small style="float:left; color: #888">' + matter['date'] + '</small>'
-    builder += '<small style="float:right; color: #888"><a href="/">See all posts</a></small>'
+    builder += '<small>' + matter['date'] + '</small>'
+    builder += '<small><a href="/">See all posts</a></small>'
     builder += '<br>'
+
+    for rule in rules:
+        for match in re.findall(rule['pattern'], body):
+            print(match)
+            print(rule['resolve'](match))
+
+            print("\n")
+            # body = body.replace(''.join(match), rule['resolve'](match))
+
     builder += body
 
     return builder
@@ -49,18 +102,19 @@ def render_bibliography_html(bibliography):
     articles = []
 
     builder_categories = ''
-    builder_articles = '<ul class="post-list">'
+    builder_articles = '<ul>'
 
     for matter in bibliography:
         if matter['category'] not in categories:
             categories.append(matter['category'])
-            builder_categories += '<a class="category" href="/test">' + matter['category'] + '</a>'
+            builder_categories += '<a href="/test">' + matter['category'] + '</a>'
 
-        articles.append([matter['title'], matter['date']])
-        builder_articles += '<li>'
-        builder_articles += '<span class="post-meta">' + matter['date'] + '</span>'
-        builder_articles += '<h3 class="post-link"><a href="/test.html">' + matter['title'] + '</a></h3>'
-        builder_articles += '</li>'
+        if [matter['title'], matter['date']] not in articles:
+            articles.append([matter['title'], matter['date']])
+            builder_articles += '<li>'
+            builder_articles += '<span>' + matter['date'] + '</span>'
+            builder_articles += '<h3><a href="#">' + matter['title'] + '</a></h3>'
+            builder_articles += '</li>'
 
 
     return builder_categories + '<hr>' + builder_articles + '</ul>'
@@ -87,12 +141,12 @@ if __name__ == '__main__':
 
         bibliography.append(matter)
 
-        article = template.replace('</body>', render_article_html(matter, body) + '</body>')
-        
+        article = template.replace(
+            '</body>', render_article_html(matter, body) + '</body>')
         open(os.path.join(target, 'test.html'), 'w').write(article)
 
     index = template.replace(
         '</body>', render_bibliography_html(bibliography) + '</body>')
-
     open(os.path.join(target, 'index.html'), 'w').write(index)
     open(os.path.join(target, 'style.css'), 'w').write(style)
+
