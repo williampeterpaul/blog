@@ -8,7 +8,7 @@ Here's some text
 
 # This is an example title
 
-## haha
+### haha
 
 *italic*
 
@@ -19,10 +19,9 @@ _italic_
 * Item 1
 * Item 2
 
-
 [GitHub](http://github.com)
 
-![GitHub Logo](image.jpeg)
+![GitHub Logo](download.gif)
 
 > I’ve always been more interested
 

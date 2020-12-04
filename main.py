@@ -48,8 +48,8 @@ rules = [
     },
     {
         'tag': 'paragraph',
-        'pattern': re.compile(r'\n([^\n]+)\n'),
-        'resolve': lambda match: '<p>{content}</p>'.format(content=match)
+        'pattern': re.compile(r'[\n]{2,}'),
+        'resolve': lambda match: '<p></p>'
     }
 ]
 
@@ -167,3 +167,5 @@ if __name__ == '__main__':
         '</section>', render_bibliography_html(bibliography) + '</section>')
     open(os.path.join(target, 'index.html'), 'w').write(index)
     open(os.path.join(target, 'style.css'), 'w').write(style)
+
+    os.system('cp {source} {destination}'.format(source = assets + '/*', destination = target))
