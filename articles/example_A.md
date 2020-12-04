@@ -3,27 +3,22 @@
 [title]: <> (Hello world)
 
 
+Preamble
 
-This is my text
-
-### Here's some code:
-
-And here's me typing
+### Here's some heading
 
 And here's me typing
 
 And here's me typing
 
 
-> Block Block ***Block*** Block Block 
+> Block Block ***Block*** Block Block Block Block ***Block*** Block Block  Block Block ***Block*** Block Block Block Block ***Block*** Block Block  Block Block ***Block*** Block Block Block Block ***Block*** Block Block 
 
 Yep
 
 ![Hahaha](image.jpeg)
 
 [Hahaha](image.jpeg)
-
-
 
 - test
 - test
@@ -33,8 +28,13 @@ Yep
 
 _**strong2**_
 
+
 _italic1_
 
 
+
+
 *italic2*
+
+
 

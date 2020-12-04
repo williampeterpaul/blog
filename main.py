@@ -42,14 +42,14 @@ rules = [
         'resolve': lambda match: '<hr />'
     },
     {
-        'tag': 'break point',
-        'pattern': re.compile(r'[\n]{2,}'),
-        'resolve': lambda match: '<br />'
-    },
-    {
         'tag': 'unordered list',
         'pattern': re.compile(r'\n(\*|\-|\+)(.*)'),
         'resolve': lambda match: '<ul><li>{element}</li></ul>'.format(element=match[1])
+    },
+    {
+        'tag': 'paragraph',
+        'pattern': re.compile(r'\n([^\n]+)\n'),
+        'resolve': lambda match: '<p>{content}</p>'.format(content=match)
     }
 ]
 
@@ -92,8 +92,8 @@ def parse_body(content):
 
     for rule in rules:
         for match in re.findall(rule['pattern'], body):
-            # print(match)
-            # print(rule['resolve'](match))
+            # print("match", match)
+            # print("rendered", rule['resolve'](match))
 
             body = re.sub(rule['pattern'], rule['resolve'](match), body, 1)
 
