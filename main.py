@@ -7,54 +7,61 @@ import re
 # This functionality has yet to be fleshed out - While parsing works on a basic level, it's far from meeting any formal markdown specifications
 rules = [
     {
-        'tag': 'header', 
-        'pattern': re.compile(r'(#+)(.*)'), 
-        'resolve': lambda match: '<h{tag}>{content}</h{tag}>'.format(tag = len(match[0]), content = match[1])
+        'tag': 'header',
+        'pattern': re.compile(r'(#+)(.*)'),
+        'resolve': lambda match: '<h{tag}>{content}</h{tag}>'.format(tag=len(match[0]), content=match[1])
     },
     {
-        'tag': 'image', 
-        'pattern': re.compile(r'!\[([^\]]+)\]\(([^)]+)\)'), 
-        'resolve': lambda match: '<img src="{source}" alt="{alternative}">'.format(source = match[1], alternative = match[0])
+        'tag': 'image',
+        'pattern': re.compile(r'!\[([^\]]+)\]\(([^)]+)\)'),
+        'resolve': lambda match: '<img src="{source}" alt="{alternative}">'.format(source=match[1], alternative=match[0])
     },
     {
-        'tag': 'link', 
-        'pattern': re.compile(r'[^!]\[([^\]]+)\]\(([^)]+)\)'), 
-        'resolve': lambda match: '<a href="{href}">{content}</a>'.format(href = match[1], content = match[0])
+        'tag': 'link',
+        'pattern': re.compile(r'[^!]\[([^\]]+)\]\(([^)]+)\)'),
+        'resolve': lambda match: '<a href="{href}">{content}</a>'.format(href=match[1], content=match[0])
     },
     {
-        'tag': 'bold', 
-        'pattern': re.compile(r'(\*\*|__)(.*?)\1'), 
-        'resolve': lambda match: '<strong>{content}</strong>'.format(content = match[1])
+        'tag': 'bold',
+        'pattern': re.compile(r'(\*\*|__)(.*?)\1'),
+        'resolve': lambda match: '<strong>{content}</strong>'.format(content=match[1])
     },
     {
-        'tag': 'emphasis', 
-        'pattern': re.compile(r'(\*|_)(.*?)\1'), 
-        'resolve': lambda match: '<em>{content}</em>'.format(content = match[1])
+        'tag': 'emphasis',
+        'pattern': re.compile(r'(\*|_)(.*?)\1'),
+        'resolve': lambda match: '<em>{content}</em>'.format(content=match[1])
     },
     {
-        'tag': 'blockquote', 
-        'pattern': re.compile(r'(&gt;|\>)(.*)'), 
-        'resolve': lambda match: '<blockquote>{content}</blockquote>'.format(content = match[1])
+        'tag': 'blockquote',
+        'pattern': re.compile(r'(&gt;|\>)(.*)'),
+        'resolve': lambda match: '<blockquote>{content}</blockquote>'.format(content=match[1])
     },
     {
-        'tag': 'horizontal rule', 
-        'pattern': re.compile(r'-{5,}'), 
+        'tag': 'horizontal rule',
+        'pattern': re.compile(r'-{5,}'),
         'resolve': lambda match: '<hr />'
     },
     {
-        'tag': 'unordered list', 
-        'pattern': re.compile(r'(\*|\-|\+)(.*)'), 
-        'resolve': lambda match: '<ul><li>{element}</li></ul>'.format(element = match[1])
+        'tag': 'unordered list',
+        'pattern': re.compile(r'(\*|\-|\+)(.*)'),
+        'resolve': lambda match: '<ul><li>{element}</li></ul>'.format(element=match[1])
     }
 ]
 
-def escape(content, quote=True):
-    content = content.replace('&', '&amp;')
-    content = content.replace('<', '&lt;')
-    content = content.replace('>', '&gt;')
+
+def escape(value, quote=True):
+    value = value.replace('&', '&amp;')
+    value = value.replace('<', '&lt;')
+    value = value.replace('>', '&gt;')
     if quote:
-        content = content.replace('"', '&quot;')
-    return content
+        value = value.replace('"', '&quot;')
+    return value
+
+
+def slugify(value):
+    value = re.sub(r'[^\w\s-]', '', value).strip().lower()
+    value = re.sub(r'[-\s]+', '-', value)
+    return value
 
 
 def parse_front_matter(content):
@@ -76,7 +83,7 @@ def parse_front_matter(content):
 def parse_body(content):
     chunks = re.split('\n', content)
     body = '\n'.join(chunks[4:])
-    
+
     for rule in rules:
         for match in re.findall(rule['pattern'], body):
             print(match)
@@ -84,7 +91,7 @@ def parse_body(content):
 
             print("\n")
             # body = body.replace(''.join(match), rule['resolve'](match))
-
+            # re.sub
 
     return body
 
@@ -110,15 +117,16 @@ def render_bibliography_html(bibliography):
     for matter in bibliography:
         if matter['category'] not in categories:
             categories.append(matter['category'])
-            builder_categories += '<a href="/test">' + matter['category'] + '</a>'
+            builder_categories += '<a href="/test">' + \
+                matter['category'] + '</a>'
 
         if [matter['title'], matter['date']] not in articles:
             articles.append([matter['title'], matter['date']])
             builder_articles += '<li>'
             builder_articles += '<span>' + matter['date'] + '</span>'
-            builder_articles += '<h3><a href="#">' + matter['title'] + '</a></h3>'
+            builder_articles += '<h3><a href="#">' + \
+                matter['title'] + '</a></h3>'
             builder_articles += '</li>'
-
 
     return builder_categories + '<hr>' + builder_articles + '</ul>'
 
@@ -146,10 +154,10 @@ if __name__ == '__main__':
 
         article = template.replace(
             '</body>', render_article_html(matter, body) + '</body>')
-        open(os.path.join(target, 'test.html'), 'w').write(article)
+        open(os.path.join(target, slugify(
+            matter['title']) + '.html'), 'w').write(article)
 
     index = template.replace(
         '</body>', render_bibliography_html(bibliography) + '</body>')
     open(os.path.join(target, 'index.html'), 'w').write(index)
     open(os.path.join(target, 'style.css'), 'w').write(style)
-
