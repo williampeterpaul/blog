@@ -1,5 +1,23 @@
-@media only screen and (orientation: landscape) {
+body {
+    display: flex;
+    font-family: 'Times New Roman', Times, serif;
 }
+
+.content {
+    flex: 0 1 640px;
+    margin: 0 auto;
+}
+
+blockquote {
+    background: rgb(241 241 241);
+}
+
+img {
+    width: 100%;
+    margin: 10px 0 10px 0;
+}
+
+@media only screen and (orientation: landscape) {}
 
 @media only screen and (orientation: portrait) {
     body {

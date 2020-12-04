@@ -4,36 +4,37 @@
 
 
 
-# This is a blog post!
-
 This is my text
 
 ### Here's some code:
 
 And here's me typing
+<br />
+And here's me typing
+<br />
+And here's me typing
 
-```python
-def hello():
-    return 42
-```
 
 > Block Block ***Block*** Block Block 
+
 Yep
 
-![Hahaha](image.png)
+![Hahaha](image.jpeg)
 
-[Hahaha](image.png)
+[Hahaha](image.jpeg)
 
 
-------
 
 - test
 - test
 * and another test
 
 ** strong1 **
+
 _**strong2**_
 
 _italic1_
+
+
 *italic2*
 

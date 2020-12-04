@@ -16,13 +16,13 @@ _italic_
 
 **haha**
 
- * Item 1
- * Item 2
+* Item 1
+* Item 2
 
 
 [GitHub](http://github.com)
 
-![GitHub Logo](/images/logo.png)
+![GitHub Logo](image.jpeg)
 
 > I’ve always been more interested
 

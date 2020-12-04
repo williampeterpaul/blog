@@ -96,10 +96,10 @@ def parse_body(content):
 
 
 def render_article_html(matter, body):
-    builder = '<h1 style="margin-bottom:7px"> ' + matter['title'] + ' </h1>'
-    builder += '<small>' + matter['date'] + '</small>'
-    builder += '<small><a href="index.html">See all posts</a></small>'
-    builder += '<br>'
+    builder = '<small>' + matter['date'] + '</small>'
+    builder += '<small style="float:right"><a href="index.html">See all posts</a></small>'
+    builder += '<hr>'
+    builder += '<h1 style="margin-bottom:7px"> ' + matter['title'] + ' </h1>'
 
     builder += body
 
@@ -154,11 +154,11 @@ if __name__ == '__main__':
         bibliography.append(matter)
 
         article = template.replace(
-            '</body>', render_article_html(matter, body) + '</body>')
+            '</section>', render_article_html(matter, body) + '</section>')
         open(os.path.join(target, slugify(
             matter['title']) + '.html'), 'w').write(article)
 
     index = template.replace(
-        '</body>', render_bibliography_html(bibliography) + '</body>')
+        '</section>', render_bibliography_html(bibliography) + '</section>')
     open(os.path.join(target, 'index.html'), 'w').write(index)
     open(os.path.join(target, 'style.css'), 'w').write(style)
