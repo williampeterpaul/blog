@@ -55,12 +55,14 @@ def escape(value, quote=True):
     value = value.replace('>', '&gt;')
     if quote:
         value = value.replace('"', '&quot;')
+
     return value
 
 
 def slugify(value):
     value = re.sub(r'[^\w\s-]', '', value).strip().lower()
     value = re.sub(r'[-\s]+', '-', value)
+
     return value
 
 
@@ -76,7 +78,6 @@ def parse_front_matter(content):
         # print(roundedBracketsMatch.group())
         matter[squareBracketsMatch.group()] = roundedBracketsMatch.group()
 
-    # print(matter)
     return matter
 
 
@@ -99,7 +100,7 @@ def parse_body(content):
 def render_article_html(matter, body):
     builder = '<h1 style="margin-bottom:7px"> ' + matter['title'] + ' </h1>'
     builder += '<small>' + matter['date'] + '</small>'
-    builder += '<small><a href="/">See all posts</a></small>'
+    builder += '<small><a href="index.html">See all posts</a></small>'
     builder += '<br>'
 
     builder += body
@@ -109,26 +110,28 @@ def render_article_html(matter, body):
 
 def render_bibliography_html(bibliography):
     categories = []
-    articles = []
-
-    builder_categories = ''
-    builder_articles = '<ul>'
+    categories_builder = ''
+    articles_builder = ''
 
     for matter in bibliography:
+        articles_builder += '<ul>'
+        articles_builder += '<li>'
+        articles_builder += '<span>' + matter['date'] + '</span>'
+        articles_builder += '<h3>'
+        articles_builder += '<a href="{href}">'.format(href = slugify(matter['title']) + '.html')
+        articles_builder += matter['title']
+        articles_builder += '</a>'
+        articles_builder += '</h3>'
+        articles_builder += '</li>'
+        articles_builder += '</ul>'
+
         if matter['category'] not in categories:
             categories.append(matter['category'])
-            builder_categories += '<a href="/test">' + \
-                matter['category'] + '</a>'
+            categories_builder += '<a href="{category}">'.format(category = slugify(matter['category']) + '.html')
+            categories_builder += matter['category']
+            categories_builder += '</a>'
 
-        if [matter['title'], matter['date']] not in articles:
-            articles.append([matter['title'], matter['date']])
-            builder_articles += '<li>'
-            builder_articles += '<span>' + matter['date'] + '</span>'
-            builder_articles += '<h3><a href="#">' + \
-                matter['title'] + '</a></h3>'
-            builder_articles += '</li>'
-
-    return builder_categories + '<hr>' + builder_articles + '</ul>'
+    return categories_builder + '<hr>' + articles_builder
 
 
 if __name__ == '__main__':
