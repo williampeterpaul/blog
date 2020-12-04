@@ -9,7 +9,7 @@ body {
 }
 
 blockquote {
-    background: rgb(241 241 241);
+    background: rgb(247 247 247);
 }
 
 img {
@@ -18,9 +18,4 @@ img {
 }
 
 @media only screen and (orientation: landscape) {}
-
-@media only screen and (orientation: portrait) {
-    body {
-        background-color: red;
-    }
-}
+@media only screen and (orientation: portrait) {}

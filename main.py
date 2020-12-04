@@ -42,6 +42,11 @@ rules = [
         'resolve': lambda match: '<hr />'
     },
     {
+        'tag': 'break point',
+        'pattern': re.compile(r'[\n]{2,}'),
+        'resolve': lambda match: '<br />'
+    },
+    {
         'tag': 'unordered list',
         'pattern': re.compile(r'\n(\*|\-|\+)(.*)'),
         'resolve': lambda match: '<ul><li>{element}</li></ul>'.format(element=match[1])

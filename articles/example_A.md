@@ -9,9 +9,9 @@ This is my text
 ### Here's some code:
 
 And here's me typing
-<br />
+
 And here's me typing
-<br />
+
 And here's me typing
 
 
