@@ -33,7 +33,7 @@ rules = [
     },
     {
         'tag': 'blockquote',
-        'pattern': re.compile(r'(&gt;|\>)(.*)'),
+        'pattern': re.compile(r'\n(&gt;|\>)(.*)'),
         'resolve': lambda match: '<blockquote>{content}</blockquote>'.format(content=match[1])
     },
     {
@@ -43,7 +43,7 @@ rules = [
     },
     {
         'tag': 'unordered list',
-        'pattern': re.compile(r'(\*|\-|\+)(.*)'),
+        'pattern': re.compile(r'\n(\*|\-|\+)(.*)'),
         'resolve': lambda match: '<ul><li>{element}</li></ul>'.format(element=match[1])
     }
 ]
@@ -87,12 +87,10 @@ def parse_body(content):
 
     for rule in rules:
         for match in re.findall(rule['pattern'], body):
-            print(match)
-            print(rule['resolve'](match))
+            # print(match)
+            # print(rule['resolve'](match))
 
-            print("\n")
-            # body = body.replace(''.join(match), rule['resolve'](match))
-            # re.sub
+            body = re.sub(rule['pattern'], rule['resolve'](match), body, 1)
 
     return body
 
