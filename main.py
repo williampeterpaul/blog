@@ -3,8 +3,8 @@ import os
 import sys
 import re
 
-# Credit to Erik Vullings author of slimdown-js for the Regular Expressions
-# https://github.com/erikvullings/slimdown-js
+# Credit to Erik Vullings author of slimdown-js for the Regular Expressions https://github.com/erikvullings/slimdown-js
+# This functionality has yet to be fleshed out - While parsing works on a basic level, it's far from meeting any formal markdown specifications
 rules = [
     {
         'tag': 'header', 
@@ -75,15 +75,8 @@ def parse_front_matter(content):
 
 def parse_body(content):
     chunks = re.split('\n', content)
-    return '\n'.join(chunks[4:])
-
-
-def render_article_html(matter, body):
-    builder = '<h1 style="margin-bottom:7px"> ' + matter['title'] + ' </h1>'
-    builder += '<small>' + matter['date'] + '</small>'
-    builder += '<small><a href="/">See all posts</a></small>'
-    builder += '<br>'
-
+    body = '\n'.join(chunks[4:])
+    
     for rule in rules:
         for match in re.findall(rule['pattern'], body):
             print(match)
@@ -91,6 +84,16 @@ def render_article_html(matter, body):
 
             print("\n")
             # body = body.replace(''.join(match), rule['resolve'](match))
+
+
+    return body
+
+
+def render_article_html(matter, body):
+    builder = '<h1 style="margin-bottom:7px"> ' + matter['title'] + ' </h1>'
+    builder += '<small>' + matter['date'] + '</small>'
+    builder += '<small><a href="/">See all posts</a></small>'
+    builder += '<br>'
 
     builder += body
 
@@ -139,7 +142,6 @@ if __name__ == '__main__':
 
         matter = parse_front_matter(content)
         body = parse_body(content)
-
         bibliography.append(matter)
 
         article = template.replace(

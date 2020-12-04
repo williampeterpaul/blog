@@ -23,3 +23,6 @@ Dates should be in ISO format `YYYY-MM-DD`
 - To build the website `python main.py articles/*.md`
 
 - An example deployment might look like `aws s3 sync build/ s3://AWS_BUCKET --acl public-read`
+
+
+Please note that while parsing works on a basic level, it's far from meeting any formal markdown specifications
