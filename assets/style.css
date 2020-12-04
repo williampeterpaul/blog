@@ -1,7 +1,8 @@
 @media only screen and (orientation: landscape) {
-  
 }
 
 @media only screen and (orientation: portrait) {
-  
+    body {
+        background-color: red;
+    }
 }
