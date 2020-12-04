@@ -124,8 +124,8 @@ if __name__ == '__main__':
     project = os.path.dirname(os.path.abspath(__file__))
     target = os.path.join(project, 'build')
 
-    style = open(os.path.join(project, 'style.css')).read()
-    template = open(os.path.join(project, 'template.html')).read()
+    style = open(os.path.join(project, 'assets/style.css')).read()
+    template = open(os.path.join(project, 'assets/template.html')).read()
 
     if not os.path.exists(target):
         os.makedirs(target)
