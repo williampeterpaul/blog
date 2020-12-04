@@ -16,18 +16,15 @@ _italic_
 
 **haha**
 
-1. Item 1
-2. Item 2
-3. Item 3
- * Item 3a
- * Item 3b
+ * Item 1
+ * Item 2
 
 
- [GitHub](http://github.com)
+[GitHub](http://github.com)
 
- ![GitHub Logo](/images/logo.png)
+![GitHub Logo](/images/logo.png)
 
- > I’ve always been more interested
+> I’ve always been more interested
 
 
 Yep

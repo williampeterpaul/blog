@@ -108,28 +108,28 @@ def render_article_html(matter, body):
 
 def render_bibliography_html(bibliography):
     categories = []
-    categories_builder = ''
-    articles_builder = ''
+    category_builder = ''
+    article_builder = ''
 
     for matter in bibliography:
-        articles_builder += '<ul>'
-        articles_builder += '<li>'
-        articles_builder += '<span>' + matter['date'] + '</span>'
-        articles_builder += '<h3>'
-        articles_builder += '<a href="{href}">'.format(href = slugify(matter['title']) + '.html')
-        articles_builder += matter['title']
-        articles_builder += '</a>'
-        articles_builder += '</h3>'
-        articles_builder += '</li>'
-        articles_builder += '</ul>'
+        article_builder += '<ul>'
+        article_builder += '<li>'
+        article_builder += '<span>' + matter['date'] + '</span>'
+        article_builder += '<h3>'
+        article_builder += '<a href="{href}">'.format(href = slugify(matter['title']) + '.html')
+        article_builder += matter['title']
+        article_builder += '</a>'
+        article_builder += '</h3>'
+        article_builder += '</li>'
+        article_builder += '</ul>'
 
         if matter['category'] not in categories:
             categories.append(matter['category'])
-            categories_builder += '<a href="{category}">'.format(category = slugify(matter['category']) + '.html')
-            categories_builder += matter['category']
-            categories_builder += '</a>'
+            category_builder += '<a href="{category}">'.format(category = slugify(matter['category']) + '.html')
+            category_builder += matter['category']
+            category_builder += '</a>'
 
-    return categories_builder + '<hr>' + articles_builder
+    return category_builder + '<hr>' + article_builder
 
 
 if __name__ == '__main__':
