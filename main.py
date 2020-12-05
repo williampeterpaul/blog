@@ -9,47 +9,47 @@ rules = [
     {
         'tag': 'header',
         'pattern': re.compile(r'(#+)(.*)'),
-        'resolve': lambda match: '<h{tag}>{content}</h{tag}>'.format(tag=len(match[0]), content=match[1])
+        'replace': lambda match: '<h{tag}>{content}</h{tag}>'.format(tag=len(match[0]), content=match[1])
     },
     {
         'tag': 'image',
         'pattern': re.compile(r'!\[([^\]]+)\]\(([^)]+)\)'),
-        'resolve': lambda match: '<img src="{source}" alt="{alternative}">'.format(source=match[1], alternative=match[0])
+        'replace': lambda match: '<img src="{source}" alt="{alternative}">'.format(source=match[1], alternative=match[0])
     },
     {
         'tag': 'link',
         'pattern': re.compile(r'[^!]\[([^\]]+)\]\(([^)]+)\)'),
-        'resolve': lambda match: '<a href="{href}">{content}</a>'.format(href=match[1], content=match[0])
+        'replace': lambda match: '<a href="{href}">{content}</a>'.format(href=match[1], content=match[0])
     },
     {
         'tag': 'bold',
         'pattern': re.compile(r'(\*\*|__)(.*?)\1'),
-        'resolve': lambda match: '<strong>{content}</strong>'.format(content=match[1])
+        'replace': lambda match: '<strong>{content}</strong>'.format(content=match[1])
     },
     {
         'tag': 'emphasis',
         'pattern': re.compile(r'(\*|_)(.*?)\1'),
-        'resolve': lambda match: '<em>{content}</em>'.format(content=match[1])
+        'replace': lambda match: '<em>{content}</em>'.format(content=match[1])
     },
     {
         'tag': 'blockquote',
         'pattern': re.compile(r'\n(&gt;|\>)(.*)'),
-        'resolve': lambda match: '<blockquote>{content}</blockquote>'.format(content=match[1])
+        'replace': lambda match: '<blockquote>{content}</blockquote>'.format(content=match[1])
     },
     {
         'tag': 'horizontal rule',
         'pattern': re.compile(r'-{5,}'),
-        'resolve': lambda match: '<hr />'
+        'replace': lambda match: '<hr />'
     },
     {
         'tag': 'unordered list',
         'pattern': re.compile(r'\n(\*|\-|\+)(.*)'),
-        'resolve': lambda match: '<ul><li>{element}</li></ul>'.format(element=match[1])
+        'replace': lambda match: '<ul><li>{element}</li></ul>'.format(element=match[1])
     },
     {
         'tag': 'paragraph',
         'pattern': re.compile(r'[\n]{2,}'),
-        'resolve': lambda match: '<p></p>'
+        'replace': lambda match: '<p></p>'
     }
 ]
 
@@ -93,9 +93,9 @@ def parse_body(content):
     for rule in rules:
         for match in re.findall(rule['pattern'], body):
             # print("match", match)
-            # print("rendered", rule['resolve'](match))
+            # print("rendered", rule['replace'](match))
 
-            body = re.sub(rule['pattern'], rule['resolve'](match), body, 1)
+            body = re.sub(rule['pattern'], rule['replace'](match), body, 1)
 
     return body
 
