@@ -100,41 +100,18 @@ def parse_body(content):
     return body
 
 
-def render_article_html(matter, body):
-    builder = '<small>' + matter['date'] + '</small>'
-    builder += '<small style="float:right"><a href="index.html">See all posts</a></small>'
-    builder += '<hr>'
-    builder += '<h1 style="margin-bottom:7px"> ' + matter['title'] + ' </h1>'
-
-    builder += body
-
-    return builder
-
-
-def render_bibliography_html(bibliography):
+def parse_bibliography(bibliography):
     categories = []
-    category_builder = ''
-    article_builder = ''
+    builder = ''
 
     for matter in bibliography:
-        article_builder += '<ul>'
-        article_builder += '<li>'
-        article_builder += '<span>' + matter['date'] + '</span>'
-        article_builder += '<h3>'
-        article_builder += '<a href="{href}">'.format(href = slugify(matter['title']) + '.html')
-        article_builder += matter['title']
-        article_builder += '</a>'
-        article_builder += '</h3>'
-        article_builder += '</li>'
-        article_builder += '</ul>'
-
         if matter['category'] not in categories:
             categories.append(matter['category'])
-            category_builder += '<a href="{category}">'.format(category = slugify(matter['category']) + '.html')
-            category_builder += matter['category']
-            category_builder += '</a>'
 
-    return category_builder + '<hr>' + article_builder
+        builder += '<ul><li>{date} - <a href="{href}">{title}</a></li></ul>'.format(
+            href=slugify(matter['title']) + '.html', title=matter['title'], date=matter['date'])
+
+    return builder
 
 
 if __name__ == '__main__':
@@ -142,11 +119,16 @@ if __name__ == '__main__':
     assets = os.path.join(project, 'assets')
     target = os.path.join(project, 'build')
 
-    style = open(os.path.join(assets, 'style.css')).read()
-    template = open(os.path.join(assets, 'template.html')).read()
+    template_style = open(os.path.join(assets, 'style.template.css')).read()
+    template_index = open(os.path.join(assets, 'index.template.html')).read()
+    template_article = open(os.path.join(
+        assets, 'article.template.html')).read()
 
     if not os.path.exists(target):
         os.makedirs(target)
+
+    os.system('cp {source} {destination}'.format(
+        source=assets + '/*', destination=target))
 
     bibliography = []
 
@@ -158,14 +140,12 @@ if __name__ == '__main__':
         body = parse_body(content)
         bibliography.append(matter)
 
-        article = template.replace(
-            '</section>', render_article_html(matter, body) + '</section>')
+        article = template_article.format(
+            content=body, date=matter['date'], title=matter['title'])
         open(os.path.join(target, slugify(
             matter['title']) + '.html'), 'w').write(article)
 
-    index = template.replace(
-        '</section>', render_bibliography_html(bibliography) + '</section>')
+    body = parse_bibliography(bibliography)
+    index = template_index.format(content=body)
     open(os.path.join(target, 'index.html'), 'w').write(index)
-    open(os.path.join(target, 'style.css'), 'w').write(style)
-
-    os.system('cp {source} {destination}'.format(source = assets + '/*', destination = target))
+    open(os.path.join(target, 'style.css'), 'w').write(template_style)
